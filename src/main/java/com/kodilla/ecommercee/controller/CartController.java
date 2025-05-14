@@ -37,9 +37,4 @@ public class CartController {
     public Cart deleteProductFromCart(Long cartId, Long productId) {
         return new Cart(cartId, 1L);
     }
-
-    @PostMapping("/{cartId}")
-    public Order createOrder(@PathVariable Long cartId) {
-        return new Order(1L, 1L, "abc123", "2025-12-31 T22:00:00");
-    }
 }

@@ -1,8 +1,10 @@
 package com.kodilla.ecommercee.controller;
 
 import com.kodilla.ecommercee.domain.Order;
+import com.kodilla.ecommercee.domain.OrderStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -16,8 +18,8 @@ public class OrderController {
     public OrderController() {
         //2 sample orders to start
         // PK = id, FK = userId
-        orders.put(1L, new Order(1L, 10L, "qwe123", "2025-12-31 T23:00:00")); // id = PK, userId = FK
-        orders.put(2L, new Order(2L, 11L, "asd456", "2025-12-31 T22:00:00"));
+        orders.put(1L, new Order(100.00, "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED)); // id = PK, userId = FK
+        orders.put(2L, new Order(100.00, "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED));
         idGenerator.set(3);
     }
 
@@ -30,7 +32,7 @@ public class OrderController {
     public Order createOrder(@RequestBody Order newOrder) {
         Long newId = idGenerator.getAndIncrement(); // PK
         // FK - userId
-        Order order =new Order(newId, newOrder.getUserId(), newOrder.getToken(), newOrder.getExpiresAt());
+        Order order =new Order(100.00, "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED);
         orders.put(newId, order);
         return order;
     }
@@ -50,7 +52,7 @@ public class OrderController {
             throw new NoSuchElementException("Order with ID " + id + " not found");
         }
         // PK = id, FK = userId
-        Order order = new Order(id, updatedOrder.getUserId(), updatedOrder.getToken(), updatedOrder.getExpiresAt());
+        Order order = new Order(100.00, "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED);
         orders.put(id, order);
         return order;
     }
