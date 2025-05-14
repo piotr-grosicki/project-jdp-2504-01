@@ -1,11 +1,9 @@
 package com.kodilla.ecommercee.controller;
 
-import com.kodilla.ecommercee.domain.Cart;
-import com.kodilla.ecommercee.domain.Order;
-import com.kodilla.ecommercee.domain.Product;
-import com.kodilla.ecommercee.domain.ProductAvailability;
+import com.kodilla.ecommercee.domain.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,5 +34,10 @@ public class CartController {
     @DeleteMapping
     public Cart deleteProductFromCart(Long cartId, Long productId) {
         return new Cart(cartId, 1L);
+    }
+
+    @PostMapping("/{cartId}")
+    public Order createOrder(@PathVariable Long cartId) {
+        return new Order(100.00, "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED);
     }
 }
