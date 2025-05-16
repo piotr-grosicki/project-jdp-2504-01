@@ -40,4 +40,15 @@ public class Product {
 //    @ManyToOne
 //    @JoinColumn(name = "product_group_id", nullable = false)
 //    private ProductGroup productGroup;
+
+    //metody tymczasowe pomocnicze
+    public static Product fromDto(ProductDto dto){
+        Product product = new Product(dto.getName(), dto.getDescription(), dto.getPrice(), ProductAvailability.AVAILABLE);
+        product.setId(dto.getId());
+        return product;
+    }
+
+    public ProductDto toDto() {
+        return new ProductDto(id, name, description, price);
+    }
 }

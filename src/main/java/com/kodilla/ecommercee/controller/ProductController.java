@@ -3,7 +3,7 @@ package com.kodilla.ecommercee.controller;
 
 import com.kodilla.ecommercee.domain.Product;
 import com.kodilla.ecommercee.domain.ProductAvailability;
-import org.springframework.http.MediaType;
+import com.kodilla.ecommercee.domain.ProductDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,33 +15,35 @@ import java.util.List;
 @RequestMapping("/v1/products")
 public class ProductController {
     @GetMapping
-    public ResponseEntity<List<Product>> getProducts() {
-        List<Product> products = new ArrayList<>();
-        Product product1 = new Product("product", "test description", 10.00, ProductAvailability.AVAILABLE);
-        products.add(product1);
+    public ResponseEntity<List<ProductDto>> getProducts() {
+        List<ProductDto> products = new ArrayList<>();
+        Product product = new Product("Mock product", "Sample description", 99.99, ProductAvailability.AVAILABLE);
+        product.setId(1L);
+        products.add(product.toDto());
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping(value = "{productId}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long productId) {
-        Product product1 = new Product("product2", "test description", 10.00, ProductAvailability.AVAILABLE);
-        return ResponseEntity.ok(product1);
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductDto> getProduct(@PathVariable Long productId) {
+        Product product = new Product("Mock product " + productId, "Description for product " + productId, 49.99, ProductAvailability.AVAILABLE);
+        product.setId(productId);
+        return ResponseEntity.ok(product.toDto());
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        Product product1 = new Product(product.getName(), product.getDescription(), product.getPrice(), ProductAvailability.AVAILABLE);
-        return ResponseEntity.ok(product1);
+    @PostMapping
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
+        Product product = Product.fromDto(productDto);
+        product.setId(100L);
+        return ResponseEntity.ok(product.toDto());
     }
 
     @PutMapping
-    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
-        Product product1 = new Product(product.getName(), product.getDescription(), product.getPrice(), ProductAvailability.AVAILABLE);
-        return ResponseEntity.ok(product1);
+    public ResponseEntity<ProductDto> updateProduct(@RequestBody ProductDto productDto) {
+        Product product = Product.fromDto(productDto);
+        return ResponseEntity.ok(product.toDto());
     }
 
-    @DeleteMapping(value = "{productId}")
-    public ResponseEntity<Void> deleteproduct(@PathVariable Long productId) {
-        return ResponseEntity.ok().build();
-    }
-}
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        return ResponseEntity.ok().build(); // No real deletion
+    }}
