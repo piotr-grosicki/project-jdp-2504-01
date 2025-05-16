@@ -8,28 +8,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 
 @Entity(name = "orders")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Order {
-
-    public Order(Double totalPrice, String address, LocalDateTime purchaseDate, OrderStatus orderStatus) {
-        this.totalPrice = totalPrice;
-        this.address = address;
-        this.purchaseDate = purchaseDate;
-        this.orderStatus = orderStatus;
-    }
 
     @Id
     @GeneratedValue
     private Long id;
 
     @Column(name = "total_price")
-    private Double totalPrice;
+    private BigDecimal totalPrice;
 
     @Column(name = "address")
     private String address;

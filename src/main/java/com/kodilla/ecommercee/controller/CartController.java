@@ -3,8 +3,10 @@ package com.kodilla.ecommercee.controller;
 import com.kodilla.ecommercee.domain.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -12,32 +14,34 @@ import java.util.List;
 public class CartController {
 
     @PutMapping
-    public Cart createCart() {
-        return new Cart(1L, 1L);
+    public CartDto createCart() {
+        return new CartDto(1L, 1L, List.of());
     }
 
     @GetMapping("/{cartId}")
-    public List<Product> getCartProducts(@PathVariable Long cartId) {
-        List<Product> products = new ArrayList<>();
-        products.add(new Product("Product1", "Description1", 50.00, ProductAvailability.AVAILABLE));
-        products.add(new Product("Product2", "Description2", 20.00, ProductAvailability.ARCHIVED));
+    public List<ProductDto> getCartProducts(@PathVariable Long cartId) {
+        List<ProductDto> products = new ArrayList<>();
+        products.add(new ProductDto(
+                cartId, "Product1", "Description1", BigDecimal.valueOf(50.00), ProductAvailability.AVAILABLE, 1L));
+        products.add(new ProductDto(
+                cartId, "Product2", "Description2", BigDecimal.valueOf(20.00), ProductAvailability.ARCHIVED, 2L));
         return products;
     }
 
-    @PutMapping("/{cartId}")
-    public Cart addProductsToCart(@PathVariable Long cartId, @RequestBody Product product) {
-        Cart cart = new Cart(cartId, 1L);
-        Product addedProduct = new Product (product.getName(), product.getDescription(), product.getPrice(), ProductAvailability.AVAILABLE);
-        return cart;
+    @PutMapping("/{cartId}/{productId}")
+    public CartDto addProductsToCart(@PathVariable Long cartId, @PathVariable Long productId) {
+        return new CartDto(cartId, 1L, List.of(productId));
     }
 
-    @DeleteMapping
-    public Cart deleteProductFromCart(Long cartId, Long productId) {
-        return new Cart(cartId, 1L);
+    @DeleteMapping("/{cartId}/{productId}")
+    public CartDto deleteProductFromCart(@PathVariable Long cartId, @PathVariable Long productId) {
+        CartDto cartDto = new CartDto(cartId, 1L, new ArrayList<>(Arrays.asList(3L, 4L, 6L, productId)));
+        cartDto.getProductsIds().remove(productId);
+        return cartDto;
     }
 
     @PostMapping("/{cartId}")
     public Order createOrder(@PathVariable Long cartId) {
-        return new Order(100.00, "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED);
+        return new Order(1L, BigDecimal.valueOf(100.00), "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED);
     }
 }
