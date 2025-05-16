@@ -15,6 +15,7 @@ import java.util.Date;
 @Entity(name = "orders")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Order {
 
     public Order(Double totalPrice, String address, LocalDateTime purchaseDate, OrderStatus orderStatus) {
