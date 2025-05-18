@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/v1/carts")
 public class CartController {
 
-    @PutMapping
+    @PostMapping
     public CartDto createCart() {
         return new CartDto(1L, 1L, List.of());
     }
@@ -29,7 +29,7 @@ public class CartController {
     }
 
     @PutMapping("/{cartId}/{productId}")
-    public CartDto addProductsToCart(@PathVariable Long cartId, @PathVariable Long productId) {
+    public CartDto addProductToCart(@PathVariable Long cartId, @PathVariable Long productId) {
         return new CartDto(cartId, 1L, List.of(productId));
     }
 
