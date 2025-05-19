@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "products")
 @Getter
@@ -31,9 +34,10 @@ public class Product {
     @Column(name = "availability", nullable = false)
     private ProductAvailability productAvailability;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems = new ArrayList<>();
+
 //    @ManyToOne
 //    @JoinColumn(name = "product_group_id", nullable = false)
 //    private ProductGroup productGroup;
-
-
 }
