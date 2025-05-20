@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,9 +15,16 @@ import java.time.LocalDateTime;
 
 @Entity(name = "orders")
 @Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Order {
+
+    public Order(BigDecimal totalPrice, String address, LocalDateTime purchaseDate, OrderStatus orderStatus) {
+        this.totalPrice = totalPrice;
+        this.address = address;
+        this.purchaseDate = purchaseDate;
+        this.orderStatus = orderStatus;
+    }
 
     @Id
     @GeneratedValue
