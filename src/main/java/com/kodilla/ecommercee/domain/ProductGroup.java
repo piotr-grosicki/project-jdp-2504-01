@@ -1,21 +1,23 @@
 package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
+import org.antlr.v4.runtime.misc.NotNull;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Entity(name = "PRODUCT_GROUPS")
+@Entity
+@Table(name = "product_groups")
 public final class ProductGroup {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
-    @Column(name = "ID", unique = true)
     private Long id;
 
     @Column(name = "name")
