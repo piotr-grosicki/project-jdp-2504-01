@@ -38,7 +38,7 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<CartItem> cartItems = new ArrayList<>();
 
-//    @ManyToOne
-//    @JoinColumn(name = "product_group_id", nullable = false)
-//    private ProductGroup productGroup;
+    @ManyToOne
+    @JoinColumn(name = "product_group_id", nullable = false)
+    private ProductGroup productGroup;
 }
