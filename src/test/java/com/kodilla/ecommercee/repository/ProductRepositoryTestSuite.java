@@ -6,10 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +21,16 @@ public class ProductRepositoryTestSuite {
     private ProductRepository productRepository;
 
     @Autowired
-    private TestEntityManager entityManager;
+    private ProductGroupRepository productGroupRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
 
     private ProductGroup productGroup;
 
@@ -32,7 +40,8 @@ public class ProductRepositoryTestSuite {
     void setUp() {
         productGroup = new ProductGroup();
         productGroup.setName("Electronics");
-        entityManager.persist(productGroup);
+        productGroup.setDescription("Electronic devices");
+        productGroup = productGroupRepository.save(productGroup);
 
         sampleProduct = new Product(
                 null,
@@ -40,37 +49,36 @@ public class ProductRepositoryTestSuite {
                 "Gaming laptop",
                 new BigDecimal("2999.99"),
                 ProductAvailability.AVAILABLE,
-                null, // cartItems
-                productGroup  // <- jeśli uwzględniasz relację
+                null,
+                productGroup
         );
-        productRepository.save(sampleProduct);
+        sampleProduct = productRepository.save(sampleProduct);
     }
 
     @AfterEach
     void cleanUp() {
+        cartItemRepository.deleteAll();
+        cartRepository.deleteAll();
         productRepository.deleteAll();
+        productGroupRepository.deleteAll();
     }
 
     @Test
     void shouldCreateAndFetchProduct() {
-        Product product = new Product(1L, "Laptop", "Gaming", new BigDecimal("2999.99"),
-                ProductAvailability.AVAILABLE, new ArrayList<>(), productGroup);
-
-        productRepository.save(product);
-
-        Optional<Product> foundProduct = productRepository.findById(product.getId());
-
+        // when
+        Optional<Product> foundProduct = productRepository.findById(sampleProduct.getId());
+        // then
         assertTrue(foundProduct.isPresent());
         assertEquals("Laptop", foundProduct.get().getName());
-        assertEquals("Gaming", foundProduct.get().getDescription());
+        assertEquals("Gaming laptop", foundProduct.get().getDescription());
         assertEquals(productGroup.getId(), foundProduct.get().getProductGroup().getId());
     }
 
     @Test
     void shouldReadProductById() {
-
+        // when
         Optional<Product> fetched = productRepository.findById(sampleProduct.getId());
-
+        // then
         assertTrue(fetched.isPresent(), "Product should be found by ID");
         assertEquals("Laptop", fetched.get().getName());
         assertEquals("Gaming laptop", fetched.get().getDescription());
@@ -80,28 +88,48 @@ public class ProductRepositoryTestSuite {
     }
 
     @Test
-    void shouldSaveProductWithCartItems() {
-        Product product = new Product(1L, "Monitor", "4K", new BigDecimal("1999.99"),
-                ProductAvailability.AVAILABLE, new ArrayList<>(), productGroup);
-
-        product = productRepository.save(product);
-        product.setPrice(new BigDecimal("120"));
-        productRepository.save(product);
-
-        Product updated = productRepository.findById(product.getId()).orElseThrow();
-        assertEquals("Monitor", updated.getName());
-        assertEquals(new BigDecimal("120"), updated.getPrice());
+    void shouldUpdateProductPrice() {
+        // given
+        sampleProduct.setPrice(new BigDecimal("2500.00"));
+        // when
+        productRepository.save(sampleProduct);
+        // then
+        Product updated = productRepository.findById(sampleProduct.getId()).orElseThrow();
+        assertEquals("Laptop", updated.getName());
+        assertEquals(new BigDecimal("2500.00"), updated.getPrice());
     }
 
     @Test
-        void shouldDeleteProduct() {
-        Product product = new Product(1L, "Monitor", "4K", new BigDecimal("1999.99"),
-                ProductAvailability.AVAILABLE, new ArrayList<>(), productGroup);
+    void shouldDeleteProduct() {
+        // given
+        Long id = sampleProduct.getId();
+        // when
+        productRepository.deleteById(id);
+        // then
+        assertTrue(productRepository.findById(id).isEmpty());
+    }
 
-        product = productRepository.save(product);
-        Long productId = product.getId();
-        productRepository.deleteById(productId);
+    @Test
+    void shouldCreateAndReadOrder() {
+        // given
 
-        assertTrue(productRepository.findById(productId).isEmpty());
+        Order order = new Order(
+                null,
+                new BigDecimal("1200.50"),
+                "123 Test Street",
+                LocalDateTime.now(),
+                OrderStatus.COMPLETED
+        );
+
+        // when
+        order = orderRepository.save(order);
+
+        // then
+        Optional<Order> saved = orderRepository.findById(order.getId());
+
+        assertTrue(saved.isPresent());
+        assertEquals("123 Test Street", saved.get().getAddress());
+        assertEquals(OrderStatus.COMPLETED, saved.get().getOrderStatus());
+        assertEquals(new BigDecimal("1200.50"), saved.get().getTotalPrice());
     }
 }

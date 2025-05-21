@@ -1,9 +1,6 @@
 package com.kodilla.ecommercee.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,10 +30,12 @@ public class Order {
 
     @Column(name = "order_status")
     private OrderStatus orderStatus;
-    //Relations to other entities will be implemented later when those entities are complete
-    //    private Long userId;
-    //    private Long cartId;
 
+//    @ManyToOne
+//    @JoinColumn(name = "user_id", nullable = false)
+//    private User user;
 
-
+//    @OneToOne
+//    @JoinColumn(name = "cart_id", nullable = false)
+//    private Cart cart;
 }
