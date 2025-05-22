@@ -32,9 +32,14 @@ public class ProductRepositoryTestSuite {
     @Autowired
     private CartItemRepository cartItemRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private ProductGroup productGroup;
 
     private Product sampleProduct;
+
+    private User sampleUser;
 
     @BeforeEach
     void setUp() {
@@ -53,6 +58,15 @@ public class ProductRepositoryTestSuite {
                 productGroup
         );
         sampleProduct = productRepository.save(sampleProduct);
+
+        sampleUser = new User();
+        sampleUser.setFirstName("Janek");
+        sampleUser.setLastName("Nowak");
+        sampleUser.setEmail("janek@nowak.com");
+        sampleUser.setBlocked(false);
+        sampleUser.setCreatedAt(LocalDateTime.now());
+
+        sampleUser = userRepository.save(sampleUser);
     }
 
     @AfterEach
@@ -113,13 +127,12 @@ public class ProductRepositoryTestSuite {
     void shouldCreateAndReadOrder() {
         // given
 
-        Order order = new Order(
-                null,
-                new BigDecimal("1200.50"),
-                "123 Test Street",
-                LocalDateTime.now(),
-                OrderStatus.COMPLETED
-        );
+        Order order = new Order();
+        order.setTotalPrice(new BigDecimal("1200.50"));
+        order.setAddress("Test Street 1");
+        order.setPurchaseDate(LocalDateTime.now());
+        order.setOrderStatus(OrderStatus.COMPLETED);
+        order.setUser(sampleUser);
 
         // when
         order = orderRepository.save(order);
@@ -128,7 +141,7 @@ public class ProductRepositoryTestSuite {
         Optional<Order> saved = orderRepository.findById(order.getId());
 
         assertTrue(saved.isPresent());
-        assertEquals("123 Test Street", saved.get().getAddress());
+        assertEquals("Test Street 1", saved.get().getAddress());
         assertEquals(OrderStatus.COMPLETED, saved.get().getOrderStatus());
         assertEquals(new BigDecimal("1200.50"), saved.get().getTotalPrice());
     }
