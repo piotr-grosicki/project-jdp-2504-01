@@ -42,8 +42,29 @@ public class CartController {
 
     @PostMapping("/{cartId}")
     public Order createOrder(@PathVariable Long cartId) {
-        return new Order(1L, BigDecimal.valueOf(100.00), "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED,
-                new User(1L, "FirstName", "LastName", "email@email.com", false, LocalDateTime.now(), new ArrayList<>(),
-                        new Cart(cartId, 1L, List.of())));
+        User user = new User();
+        user.setId(1L);
+        user.setFirstName("FirstName");
+        user.setLastName("LastName");
+        user.setEmail("email@email.com");
+        user.setBlocked(false);
+        user.setCreatedAt(LocalDateTime.now());
+
+        Cart cart = new Cart();
+        cart.setId(cartId);
+        cart.setUser(user);
+        cart.setCartItems(List.of());
+
+        user.setCart(cart);
+
+        return new Order(
+                1L,
+                BigDecimal.valueOf(100.00),
+                "Elm street",
+                LocalDateTime.now(),
+                OrderStatus.COMPLETED,
+                user
+        );
     }
+
 }
