@@ -10,10 +10,14 @@ import org.antlr.v4.runtime.misc.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "product_groups")
 public final class ProductGroup {
+
+    public ProductGroup(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
