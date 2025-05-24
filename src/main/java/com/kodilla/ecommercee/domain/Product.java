@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "products")
 @Getter
@@ -25,15 +29,16 @@ public class Product {
     private String description;
 
     @Column(name = "price", nullable = false)
-    private Double price;
+    private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "availability", nullable = false)
     private ProductAvailability productAvailability;
 
-//    @ManyToOne
-//    @JoinColumn(name = "product_group_id", nullable = false)
-//    private ProductGroup productGroup;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems = new ArrayList<>();
 
-
+    @ManyToOne
+    @JoinColumn(name = "product_group_id", nullable = false)
+    private ProductGroup productGroup;
 }

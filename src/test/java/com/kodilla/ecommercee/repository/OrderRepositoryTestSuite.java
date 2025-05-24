@@ -2,6 +2,7 @@ package com.kodilla.ecommercee.repository;
 
 import com.kodilla.ecommercee.domain.Order;
 import com.kodilla.ecommercee.domain.OrderStatus;
+import com.kodilla.ecommercee.domain.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,11 +22,20 @@ public class OrderRepositoryTestSuite {
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void prepareData() {
-        Order order1 = new Order(new BigDecimal("100"), "Elm Street", LocalDateTime.now(), OrderStatus.COMPLETED);
-        Order order2 = new Order(new BigDecimal("200"), "Elm Street", LocalDateTime.now(), OrderStatus.COMPLETED);
+        User user = new User();
+        user.setBlocked(false);
+        user.setEmail("test@test.com");
+        user.setFirstName("test");
+        user.setLastName("test");
+        user.setCreatedAt(LocalDateTime.now());
+        userRepository.save(user);
+        Order order1 = new Order(new BigDecimal("100"), "Elm Street", LocalDateTime.now(), OrderStatus.COMPLETED, user);
+        Order order2 = new Order(new BigDecimal("200"), "Elm Street", LocalDateTime.now(), OrderStatus.COMPLETED, user);
         orderRepository.save(order1);
         orderRepository.save(order2);
     }
@@ -33,20 +43,17 @@ public class OrderRepositoryTestSuite {
     @AfterEach
     void cleanDatabase() {
         orderRepository.deleteAll();
-    }
-
-    @Test
-    void testCreateOrder() {
-        Iterable<Order> ordersIterable = orderRepository.findAll();
-        List<Order> orders = StreamSupport.stream(ordersIterable.spliterator(), false)
-                .toList();
-        assertEquals(2, orders.size());
+        userRepository.deleteAll();
     }
 
     @Test
     void testReadOrder() {
         Order order = orderRepository.findAll().iterator().next();
+        Iterable<Order> ordersIterable = orderRepository.findAll();
+        List<Order> orders = StreamSupport.stream(ordersIterable.spliterator(), false)
+                .toList();
         assertEquals("Elm Street", order.getAddress());
+        assertEquals(2, orders.size());
     }
 
     @Test

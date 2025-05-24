@@ -1,9 +1,6 @@
 package com.kodilla.ecommercee.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,11 +16,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Order {
 
-    public Order(BigDecimal totalPrice, String address, LocalDateTime purchaseDate, OrderStatus orderStatus) {
+    public Order(BigDecimal totalPrice, String address, LocalDateTime purchaseDate, OrderStatus orderStatus, User user) {
         this.totalPrice = totalPrice;
         this.address = address;
         this.purchaseDate = purchaseDate;
         this.orderStatus = orderStatus;
+        this.user = user;
     }
 
     @Id
@@ -42,9 +40,11 @@ public class Order {
     @Column(name = "order_status")
     private OrderStatus orderStatus;
     //Relations to other entities will be implemented later when those entities are complete
-    //    private Long userId;
+    //    private Long userId;  <-- done as a User field below
     //    private Long cartId;
 
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "users_id", nullable = false)
+    private User user;
 
 }
