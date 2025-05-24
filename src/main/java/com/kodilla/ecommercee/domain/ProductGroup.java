@@ -16,7 +16,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 public final class ProductGroup {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @NotNull
     private Long id;
 
