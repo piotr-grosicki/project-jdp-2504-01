@@ -42,8 +42,6 @@ public class CartController {
 
     @PostMapping("/{cartId}")
     public Order createOrder(@PathVariable Long cartId) {
-        return new Order(1L, BigDecimal.valueOf(100.00), "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED,
-                new User(1L, "FirstName", "LastName", "email@email.com", false, LocalDateTime.now(), new ArrayList<>(),
-                        new Cart(cartId, 1L, List.of())));
+        return new Order(BigDecimal.valueOf(100.00), "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED, null);
     }
 }
