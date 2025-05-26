@@ -58,7 +58,6 @@ public class CartController {
         user.setCart(cart);
 
         return new Order(
-                1L,
                 BigDecimal.valueOf(100.00),
                 "Elm street",
                 LocalDateTime.now(),
