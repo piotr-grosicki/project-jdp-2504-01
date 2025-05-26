@@ -1,11 +1,12 @@
 package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
+//import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.antlr.v4.runtime.misc.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ public final class ProductGroup {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @NotNull
+//    @NotNull
     private Long id;
 
     @Column(name = "name")
@@ -25,4 +26,13 @@ public final class ProductGroup {
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany
+            (
+            targetEntity = Product.class,
+            mappedBy = "productGroupId",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private List<Product> products;
 }

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,10 +34,15 @@ public class Product {
     @Column(name = "availability", nullable = false)
     private ProductAvailability productAvailability;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<CartItem> cartItems = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "product_group_id", nullable = false)
+    private ProductGroup productGroupId;
 
-//    @ManyToOne
-//    @JoinColumn(name = "product_group_id", nullable = false)
-//    private ProductGroup productGroup;
+    @ManyToMany(mappedBy = "products", cascade = {CascadeType.DETACH,
+            CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<Cart> carts;
+
+    public Product(Long id, String name, String description, BigDecimal price,
+                   ProductAvailability productAvailability, Long productGroup) {
+    }
 }

@@ -34,14 +34,14 @@ public class ProductController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
         ProductDto productDto1 = new ProductDto(
-                1L, productDto.getName(), productDto.getDescription(), productDto.getPrice(), ProductAvailability.AVAILABLE, productDto.getCategoryId());
+                1L, productDto.getName(), productDto.getDescription(), productDto.getPrice(), ProductAvailability.AVAILABLE, productDto.getId());
         return ResponseEntity.ok(productDto1);
     }
 
     @PutMapping
     public ResponseEntity<ProductDto> updateProduct(@RequestBody ProductDto productDto) {
         ProductDto productDto1 = new ProductDto(
-                1L, productDto.getName(), productDto.getDescription(), productDto.getPrice(), ProductAvailability.AVAILABLE, productDto.getCategoryId());
+                1L, productDto.getName(), productDto.getDescription(), productDto.getPrice(), ProductAvailability.AVAILABLE, productDto.getProductGroupId());
         return ResponseEntity.ok(productDto1);
     }
 

@@ -33,6 +33,8 @@ public class Order {
 
     @Column(name = "order_status")
     private OrderStatus orderStatus;
+
+
     //Relations to other entities will be implemented later when those entities are complete
     //    private Long userId;
     //    private Long cartId;

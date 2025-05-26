@@ -20,8 +20,8 @@ public class GroupRepositoryTestSuite {
 
     @BeforeEach
     public void init() {
-        group1 = new ProductGroup(1L,"Ships","Anything that floats except kayaks");
-        group2 = new ProductGroup(2l,"Bombs","All kinds of bombs");
+        group1 = new ProductGroup(1L,"Ships","Anything that floats except kayaks",null);
+        group2 = new ProductGroup(2l,"Bombs","All kinds of bombs",null);
         productGroupRepository.save(group1);
         productGroupRepository.save(group2);
     }
