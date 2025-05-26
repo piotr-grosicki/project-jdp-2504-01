@@ -14,8 +14,15 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Order {
+
+    public Order(BigDecimal totalPrice, String address, LocalDateTime purchaseDate, OrderStatus orderStatus, User user) {
+        this.totalPrice = totalPrice;
+        this.address = address;
+        this.purchaseDate = purchaseDate;
+        this.orderStatus = orderStatus;
+        this.user = user;
+    }
 
     @Id
     @GeneratedValue
