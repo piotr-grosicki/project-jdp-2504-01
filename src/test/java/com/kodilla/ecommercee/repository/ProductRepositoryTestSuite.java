@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,7 +55,7 @@ public class ProductRepositoryTestSuite {
                 "Gaming laptop",
                 new BigDecimal("2999.99"),
                 ProductAvailability.AVAILABLE,
-                null,
+                new ArrayList<>(),
                 productGroup
         );
         sampleProduct = productRepository.save(sampleProduct);
@@ -73,8 +74,10 @@ public class ProductRepositoryTestSuite {
     void cleanUp() {
         cartItemRepository.deleteAll();
         cartRepository.deleteAll();
+        orderRepository.deleteAll();
         productRepository.deleteAll();
         productGroupRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
