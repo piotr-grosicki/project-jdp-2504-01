@@ -1,7 +1,12 @@
 package com.kodilla.ecommercee.controller;
 
+import com.kodilla.ecommercee.domain.User;
 import com.kodilla.ecommercee.domain.UserDto;
+import com.kodilla.ecommercee.exception.UserNotFoundException;
+import com.kodilla.ecommercee.mapper.UserMapper;
+import com.kodilla.ecommercee.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,41 +21,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
+    private final UserService service;
+    private final UserMapper mapper;
+
     @GetMapping
-        public ResponseEntity<List<UserDto>> getUsers() {
-            List<UserDto> users = new ArrayList<>();
-            users.add(new UserDto(
-                    1L, "John", "Doe", "john.doe@example.com", false, LocalDateTime.now()));
-            users.add(new UserDto(
-                    2L, "Jane", "Smith", "jane.smith@example.com", true, LocalDateTime.now()));
-            return ResponseEntity.ok(users);
-        }
+    public ResponseEntity<List<UserDto>> getUsers() {
+        return ResponseEntity.ok(mapper.mapToUserDtoList(service.getAllUsers()));
+    }
 
     @GetMapping("/{userId}")
-        public ResponseEntity<UserDto> getUser(@PathVariable long userId) {
-        UserDto user = new UserDto(
-                userId, "Mock", "User", "mock.user@example.com", false, LocalDateTime.now());
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserDto> getUser(@PathVariable long userId) throws UserNotFoundException {
+        return ResponseEntity.ok(mapper.mapToUserDto(service.getUserById(userId)));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto user){
-            UserDto createdUser  = new UserDto(
-                    100L, "FirstName", "LastName", user.getEmail(), false, LocalDateTime.now());
-            return ResponseEntity.ok(createdUser);
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(mapper.mapToUserDto(service.createUser(mapper.mapToUser(userDto))));
     }
 
     @PutMapping("/block/{userId}")
-    public ResponseEntity<UserDto> blockUser(@PathVariable Long userId){
-        UserDto blockedUser = new UserDto(
-                userId, "BlockedFirstName", "BlockedLastName", "blocked@example.com", true, LocalDateTime.now());
-        return ResponseEntity.ok(blockedUser);
+    public ResponseEntity<Boolean> blockUser(@PathVariable Long userId) throws UserNotFoundException {
+        return ResponseEntity.ok(service.blockUser(userId));
     }
 
     @PostMapping("/token")
-    public ResponseEntity<String> generateToken(@RequestBody UserDto user) {
-        // Sztuczne generowanie tokenu (ważny 1h)
-        String token = "mocked-token-12345";
-        return ResponseEntity.ok(token);
+    public ResponseEntity<String> generateToken(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(service.generateToken(mapper.mapToUser(userDto)));
     }
 }

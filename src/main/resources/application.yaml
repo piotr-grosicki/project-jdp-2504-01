@@ -7,3 +7,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+
+jwt:
+  secret: your-very-secure-and-long-secret-key-12345

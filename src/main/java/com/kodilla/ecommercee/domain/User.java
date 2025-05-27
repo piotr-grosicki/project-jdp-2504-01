@@ -14,8 +14,16 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
+
+    public User(String firstName, String lastName, String email, boolean isBlocked, LocalDateTime createdAt, Cart cart) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.isBlocked = isBlocked;
+        this.createdAt = createdAt;
+        this.cart = cart;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
