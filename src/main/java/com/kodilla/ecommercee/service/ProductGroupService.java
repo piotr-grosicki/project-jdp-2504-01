@@ -15,7 +15,8 @@ public class ProductGroupService {
     private ProductGroupRepository repository;
 
     public List<ProductGroup> getAllProductGroups() {
-        return repository.findAll();
+        List<ProductGroup> productGroups = (List<ProductGroup>) repository.findAll();
+        return productGroups;
     }
 
     public ProductGroup getProductGroupById(Long id) throws ProductGroupNotFoundException {
@@ -33,5 +34,4 @@ public class ProductGroupService {
             throw new ProductGroupNotFoundException();
         }
     }
-
 }
