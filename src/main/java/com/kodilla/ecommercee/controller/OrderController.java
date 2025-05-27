@@ -3,6 +3,9 @@ package com.kodilla.ecommercee.controller;
 import com.kodilla.ecommercee.domain.Order;
 import com.kodilla.ecommercee.domain.OrderDto;
 import com.kodilla.ecommercee.domain.OrderStatus;
+import com.kodilla.ecommercee.mapper.OrderMapper;
+import com.kodilla.ecommercee.service.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -12,58 +15,36 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/api/orders")
+@RequiredArgsConstructor
 public class OrderController {
 
-    private final Map<Long, OrderDto> orders = new HashMap<>();
-    private final AtomicLong idGenerator = new AtomicLong(1); // generator PK
-
-    public OrderController() {
-        //2 sample orders to start
-        // PK = id, FK = userId
-        orders.put(1L, new OrderDto(1L, BigDecimal.valueOf(100.00), "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED)); // id = PK, userId = FK
-        orders.put(2L, new OrderDto(2L, BigDecimal.valueOf(100.00), "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED));
-        idGenerator.set(3);
-    }
+    private final OrderService orderService;
+    private final OrderMapper orderMapper;
 
     @GetMapping
     public List<OrderDto> getAllOrders() {
-        return new ArrayList<>(orders.values());
+        return orderService.getAllOrders().stream()
+                .map(orderMapper::mapToOrderDto)
+                .toList();
     }
 
     @PostMapping
-    public OrderDto createOrder(@RequestBody OrderDto newOrder) {
-        Long newId = idGenerator.getAndIncrement(); // PK
-        // FK - userId
-        OrderDto order =new OrderDto(1L, BigDecimal.valueOf(100.00), "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED);
-        orders.put(newId, order);
-        return order;
+    public OrderDto createOrder(@RequestBody OrderDto orderDto) {
+        return orderMapper.mapToOrderDto(orderService.createOrder(orderDto));
     }
 
     @GetMapping("/{id}")
     public OrderDto getOrderById(@PathVariable Long id) {
-        OrderDto order = orders.get(id); // PK = id
-        if (order == null) {
-            throw new NoSuchElementException("Order with ID " + id + " not found");
-        }
-        return order;
+        return orderMapper.mapToOrderDto(orderService.getOrderById(id));
     }
 
     @PutMapping("/{id}")
-    public OrderDto updateOrder(@PathVariable Long id, @RequestBody OrderDto updatedOrder) {
-        if(!orders.containsKey(id)) {
-            throw new NoSuchElementException("Order with ID " + id + " not found");
-        }
-        // PK = id, FK = userId
-        OrderDto order = new OrderDto(1L,BigDecimal.valueOf(100.00), "Elm street", LocalDateTime.now(), OrderStatus.COMPLETED);
-        orders.put(id, order);
-        return order;
+    public OrderDto updateOrder(@PathVariable Long id, @RequestBody OrderDto orderDto) {
+        return orderMapper.mapToOrderDto(orderService.updateOrder(id, orderDto));
     }
 
     @DeleteMapping("/{id}")
-    public String deleteOrder(@PathVariable Long id) {
-        if (orders.remove(id) == null) {
-            throw new NoSuchElementException("Order with ID " + id + " not found");
-        }
-        return "Order with ID " + id + " deleted (mock)";
+    public void deleteOrder(@PathVariable Long id) {
+        orderService.deleteOrder(id);
     }
 }

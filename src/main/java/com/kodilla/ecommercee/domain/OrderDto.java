@@ -14,5 +14,5 @@ public class OrderDto {
     private String address;
     private LocalDateTime purchaseDate;
     private OrderStatus orderStatus;
-
+    private Long userId;
 }

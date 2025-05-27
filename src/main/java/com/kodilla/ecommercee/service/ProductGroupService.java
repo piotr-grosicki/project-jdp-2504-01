@@ -5,6 +5,8 @@ import com.kodilla.ecommercee.repository.ProductGroupRepository;
 import com.kodilla.ecommercee.domain.ProductGroup;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,8 @@ public class ProductGroupService {
     private ProductGroupRepository repository;
 
     public List<ProductGroup> getAllProductGroups() {
-        return repository.findAll();
+        return StreamSupport.stream(repository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 
     public ProductGroup getProductGroupById(Long id) throws ProductGroupNotFoundException {
