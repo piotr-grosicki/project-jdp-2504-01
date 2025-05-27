@@ -28,6 +28,9 @@ public class CartRepositoryTestSuite {
     @Autowired
     private ProductGroupRepository productGroupRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private Product product1;
 
     private Product product2;
@@ -39,8 +42,6 @@ public class CartRepositoryTestSuite {
     private CartItem cartItem2;
 
     private User user;
-    @Autowired
-    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
@@ -98,6 +99,7 @@ public class CartRepositoryTestSuite {
         cartRepository.deleteAll();
         productRepository.deleteAll();
         productGroupRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
