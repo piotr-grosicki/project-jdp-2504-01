@@ -11,11 +11,9 @@ import org.springframework.stereotype.Service;
 public class ProductGroupMapper {
 
     public ProductGroup mapToProductGroup(final ProductGroupDto productGroupDto) {
+
         ProductGroup productGroup = new ProductGroup(productGroupDto.getId(),
                 productGroupDto.getName(), productGroupDto.getDescription(),null);
-//        if (productGroupDto.getId() != null) {
-//            productGroup.setId(productGroupDto.getId());
-//        }
         return productGroup;
     }
 

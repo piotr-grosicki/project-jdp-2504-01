@@ -20,8 +20,9 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @ManyToMany(cascade = {CascadeType.DETACH,
             CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

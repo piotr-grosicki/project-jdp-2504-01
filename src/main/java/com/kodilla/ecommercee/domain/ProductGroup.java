@@ -11,10 +11,14 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "product_groups")
 public final class ProductGroup {
+
+    public ProductGroup(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
